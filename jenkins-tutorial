@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+environment {
+    name = 'zeeshan'
+}
+parameters {
+    string(name: 'person', defaultValue: 'zeeshan', description:'name')
+    booleanParam(name: 'isMale', defaultValue: true, description: 'Who are You?')
+    choice(name: 'Select', choices: ['A', 'B', 'C'], description: 'Select Value')}
+    stages {
+        stage('Test') {
+            steps {
+                sh '''
+                ls
+                touch myfile1
+                pwd
+                ls
+                '''
+            }
+        }
+        stage('Parameters value') {
+            steps {
+                sh '''
+                echo "${name}"
+                echo "${isMale}"
+                echo "${Select}"
+                '''
+            }
+        }
+        stage('continue')
+        {
+            input {
+                message "Do want to continue?"
+                ok "press ok"
+            }
+            steps {
+            echo "Deploy on Prod"
+            }
+            post {
+            always{ echo "always"}
+            failure{ echo "fail"}
+            success {echo "success"}
+            }
+        }
+        
+        
+        stage('Prod'){
+            steps{
+                echo 'Prod'
+            }
+        }
+    }
+}
